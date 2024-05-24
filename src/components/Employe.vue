@@ -1,5 +1,5 @@
 <template>
-    <TableView :headings="headings" :employees="employees" @save-Employe = "handleSave" @delete-Employe="handleDelete"></TableView>
+    <TableView :headings="headings" :employees="employees" @save-Employe = "handleSave" @delete-Employe="handleDelete" @edit-save="handleEditSave"></TableView>
 </template>
 
 <script>
@@ -23,6 +23,9 @@ export default {
     },
     handleDelete(employe) {
       this.$emit('employe-delete', employe)
+    }, 
+    handleEditSave(employe) {
+      this.$emit('edit-save', employe)
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <Employe :employees="employeesData" :headings="headings" @employe-save="handleSave" @employe-delete= "handleDelete"/>
+  <Employe :employees="employeesData" :headings="headings" @employe-save="handleSave" @employe-delete= "handleDelete" @edit-save="handleEditSave"/>
   
 </template>
 
@@ -112,6 +112,16 @@ export default {
     handleDelete(id) {
       console.log('sadff')
       this.employeesData = this.employeesData.filter(item => item.EmployeeId !== id)
+    },
+    handleEditSave(employe) {
+      this.employeesData.forEach((item,i)=> {
+        if(item.EmployeeId === employe.EmployeeId) {
+          this.employeesData[i] = employe
+        }
+      })
+      console.log('log',employe);
+      console.log('log',this.employeesData);
+
     }
   }
 }

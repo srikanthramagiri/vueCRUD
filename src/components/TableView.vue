@@ -4,15 +4,23 @@
         <tbody>
             <tr v-for="employee in employees" :key="employee.EmployeeId">
         <td><input disabled type="text" v-model="employee.EmployeeId"/></td>
-        <td><input type="text" v-model="employee.FirstName" /></td>
-        <td><input type="text" v-model="employee.LastName" /></td>
-        <td><input type="text" v-model="employee.DOB"/></td>
-        <td><input type="text" v-model="employee.Salary"/></td>
-        <td><input type="text" v-model="employee.Address"/></td>
-        <td><button @click="editEmploye">edit</button><button @click="deleteEmploye(employee.EmployeeId)">delete</button></td>
+        <td><input disabled type="text" v-model="employee.FirstName" /></td>
+        <td><input disabled type="text" v-model="employee.LastName" /></td>
+        <td><input disabled type="text" v-model="employee.DOB"/></td>
+        <td><input disabled type="text" v-model="employee.Salary"/></td>
+        <td><input disabled type="text" v-model="employee.Address"/></td>
+        <td><button @click="editEmploye(employee, employees)">edit</button><button @click="deleteEmploye(employee.EmployeeId)">delete</button></td>
       </tr>
-      <tr v-if="showEdit">
+      <tr v-if="showaddsave">
         <td><input type="text" v-model="newEmployee.EmployeeId"></td>
+       <td><input type="text" v-model="newEmployee.FirstName"></td>
+       <td><input type="text" v-model="newEmployee.LastName"></td>
+       <td><input type="text" v-model="newEmployee.DOB"></td>
+       <td><input type="text" v-model="newEmployee.Salary"></td>
+       <td><input type="text" v-model="newEmployee.Address"></td>
+      </tr>
+      <tr v-if="showEditSave">
+        <td><input disabled type="text" v-model="newEmployee.EmployeeId"></td>
        <td><input type="text" v-model="newEmployee.FirstName"></td>
        <td><input type="text" v-model="newEmployee.LastName"></td>
        <td><input type="text" v-model="newEmployee.DOB"></td>
@@ -22,7 +30,9 @@
         </tbody>
     </table>
     <button @click="addEmployee"> add </button>
-    <button @click="save">save</button>
+
+    <button v-if="showaddsave" @click="save">add save</button>
+    <button v-if="showEditSave" @click="editsave"> edit save</button>
 </template>
 
 <script>
@@ -34,8 +44,8 @@ export default {
   },
   methods: {
     addEmployee() {
-      this.showEdit = !this.showEdit;
-      if(this.showEdit) {
+      this.showaddsave = !this.showaddsave;
+      if(this.showEditSave) {
         this.newEmployee ={
           EmployeeId: '',
         FirstName: '',
@@ -49,19 +59,53 @@ export default {
     deleteEmploye(id) {
       this.$emit('delete-Employe', id)
     },
-    editEmploye() {
-      
-      this.$emit('editEmploye', this.newEmployee)
+    editEmploye(employe) {
+      this.isEdit = !this.isEdit;
+      this.showEditSave = !this.showEditSave;
+      this.newEmployee = {... employe}
+      // this.employees.forEach((item)=> {
+      //   // if (item.EmployeeId === employe.id ) {
+      //   //   console.log(item)
+      //   // }
+      // })
+     
+    },
+    editsave() {
+      this.showEdit = !this.showEdit;
+      this.$emit('edit-save', this.newEmployee)
+      this.showEditSave = false
+      this.newEmployee ={
+          EmployeeId: '',
+        FirstName: '',
+        LastName: '',
+        DOB: '',
+        Salary: '',
+        Address: ''
+        }
     },
     save() {
       console.log('save')
-      this.showEdit = false;
-      this.$emit('save-Employe', this.newEmployee)
+      this.showaddsave = false;
+      this.showEditSave = false;
+   if(this.newEmployee.EmployeeId) {
+    this.$emit('save-Employe', this.newEmployee)
+    this.newEmployee ={
+          EmployeeId: '',
+        FirstName: '',
+        LastName: '',
+        DOB: '',
+        Salary: '',
+        Address: ''
+        }
+   }
+     
     }
   },
   data() {
     return {
-      showEdit: false,
+      showaddsave: false,
+      isEdit: true,
+      showEditSave: false,
       newEmployee: {
         EmployeeId: '',
         FirstName: '',
